@@ -1,0 +1,1075 @@
+--4 si 5
+CREATE TABLE FURNIZOR (
+    id_furnizor  number(5) NOT NULL PRIMARY KEY, 
+    denumirea char(25),
+    telefon  char(10) constraint telefon unique, 
+    email char(30), 
+    unique(email)
+);
+CREATE SEQUENCE NEXT_ID_FURNIZOR
+INCREMENT by 1
+START WITH 100
+MAXVALUE 99999
+NOCYCLE;
+
+INSERT INTO FURNIZOR VALUES (NEXT_ID_FURNIZOR.NEXTVAL, 'EMAG','0728282106','contact@emag.ro');
+INSERT INTO FURNIZOR VALUES (NEXT_ID_FURNIZOR.NEXTVAL, 'OptimusDigital','0728282107','contact@optidigi.ro');
+INSERT INTO FURNIZOR VALUES (NEXT_ID_FURNIZOR.NEXTVAL, 'HobbyMarket','0721516130','contact@hobby.ro');
+INSERT INTO FURNIZOR VALUES (NEXT_ID_FURNIZOR.NEXTVAL, 'Printam3D','0721216130','contact@3D.ro');
+INSERT INTO FURNIZOR VALUES (NEXT_ID_FURNIZOR.NEXTVAL, 'CEL','0372245334','contact@cel.ro');
+INSERT INTO FURNIZOR VALUES (NEXT_ID_FURNIZOR.NEXTVAL, 'ArduShop','0727387467','contact@ardu.ro');
+COMMIT;
+
+
+CREATE TABLE IMPRIMANTE (
+    id_imprimanta  number(5) NOT NULL PRIMARY KEY, 
+    nume char(25),
+    dimensiune_pat  number(5)   
+);
+
+CREATE SEQUENCE NEXT_ID_IMPRIMANTE
+INCREMENT by 10
+START WITH 10
+MAXVALUE 99999
+NOCYCLE;
+
+INSERT INTO IMPRIMANTE VALUES (NEXT_ID_IMPRIMANTE.NEXTVAL, 'Odysseuss',625);
+INSERT INTO IMPRIMANTE VALUES (NEXT_ID_IMPRIMANTE.NEXTVAL, 'TevoTornado',900);
+INSERT INTO IMPRIMANTE VALUES (NEXT_ID_IMPRIMANTE.NEXTVAL, 'Anycubic',600);
+INSERT INTO IMPRIMANTE VALUES (NEXT_ID_IMPRIMANTE.NEXTVAL, 'Odysseuss',1000);
+INSERT INTO IMPRIMANTE VALUES (NEXT_ID_IMPRIMANTE.NEXTVAL, 'Prusa',900);
+INSERT INTO IMPRIMANTE VALUES (NEXT_ID_IMPRIMANTE.NEXTVAL, 'MakerBot',2500);
+
+COMMIT;
+
+
+
+CREATE TABLE FILAMENT (
+    id_filament  number(5) NOT NULL PRIMARY KEY, 
+    tip char(4) NOT NULL,
+    temperatura_topire number(4),
+    gramaj number(4)
+);
+
+CREATE SEQUENCE NEXT_ID_FILAMENT
+INCREMENT by 1
+START WITH 100
+MAXVALUE 99999
+NOCYCLE;
+
+INSERT INTO FILAMENT VALUES (NEXT_ID_FILAMENT.NEXTVAL, 'PLA',200,500);
+INSERT INTO FILAMENT VALUES (NEXT_ID_FILAMENT.NEXTVAL, 'TPU',250,500);
+INSERT INTO FILAMENT VALUES (NEXT_ID_FILAMENT.NEXTVAL, 'PLA',230,1000);
+INSERT INTO FILAMENT VALUES (NEXT_ID_FILAMENT.NEXTVAL, 'ABS',180,500);
+INSERT INTO FILAMENT VALUES (NEXT_ID_FILAMENT.NEXTVAL, 'PETG',330,250);
+INSERT INTO FILAMENT VALUES (NEXT_ID_FILAMENT.NEXTVAL, 'PLA',NULL,500);
+
+COMMIT;
+
+CREATE TABLE CULORI (
+    id_culoare  number(5) NOT NULL PRIMARY KEY, 
+    nume char(25)
+);
+
+CREATE SEQUENCE NEXT_ID_CULORI
+INCREMENT by 1
+START WITH 1
+MAXVALUE 99999
+NOCYCLE;
+
+INSERT INTO CULORI VALUES (NEXT_ID_CULORI.NEXTVAL, 'Alb');
+INSERT INTO CULORI VALUES (NEXT_ID_CULORI.NEXTVAL, 'Verde primavara');
+INSERT INTO CULORI VALUES (NEXT_ID_CULORI.NEXTVAL, 'Negru');
+INSERT INTO CULORI VALUES (NEXT_ID_CULORI.NEXTVAL, 'Rosu caramiziu');
+INSERT INTO CULORI VALUES (NEXT_ID_CULORI.NEXTVAL, 'Rosu foc');
+INSERT INTO CULORI VALUES (NEXT_ID_CULORI.NEXTVAL, 'Auriu');
+
+COMMIT;
+
+CREATE TABLE CATEGORIE (
+    id_categorie  number(5) NOT NULL PRIMARY KEY, 
+    nume char(25), 
+    unique(nume)
+);
+
+CREATE SEQUENCE NEXT_ID_CATEGORIE
+INCREMENT by 1
+START WITH 100
+MAXVALUE 99999
+NOCYCLE;
+
+INSERT INTO CATEGORIE VALUES (NEXT_ID_CATEGORIE.NEXTVAL, 'Home');
+INSERT INTO CATEGORIE VALUES (NEXT_ID_CATEGORIE.NEXTVAL, 'Lithophane');
+INSERT INTO CATEGORIE VALUES (NEXT_ID_CATEGORIE.NEXTVAL, 'Suport Telefon');
+INSERT INTO CATEGORIE VALUES (NEXT_ID_CATEGORIE.NEXTVAL, 'Produse Caini');
+INSERT INTO CATEGORIE VALUES (NEXT_ID_CATEGORIE.NEXTVAL, 'Puzzle');
+INSERT INTO CATEGORIE VALUES (NEXT_ID_CATEGORIE.NEXTVAL, 'Licheni');
+
+COMMIT;
+
+CREATE TABLE CLIENTI (
+    id_client  number(5) NOT NULL PRIMARY KEY, 
+    nume char(25) NOT NULL,
+    prenume char(25) NOT NULL,
+    telefon  char(10) NOT NULL, 
+    email char(30) NOT NULL, 
+    unique(email,telefon)
+);
+CREATE SEQUENCE NEXT_ID_CLIENTI
+INCREMENT by 1
+START WITH 100
+MAXVALUE 99999
+NOCYCLE;
+
+INSERT INTO CLIENTI VALUES (NEXT_ID_CLIENTI.NEXTVAL, 'Ion','Alexandra','0728282106','alexion200123@yahoo.com');
+INSERT INTO CLIENTI VALUES (NEXT_ID_CLIENTI.NEXTVAL, 'Dinu','Cristian','0724702608','dinuc02@yahoo.com');
+INSERT INTO CLIENTI VALUES (NEXT_ID_CLIENTI.NEXTVAL, 'Vulpe','Catalin','0785212833','vulpea69@gmail.com');
+INSERT INTO CLIENTI VALUES (NEXT_ID_CLIENTI.NEXTVAL, 'Dinca','Ruxandra','0721283488','ruxi23@yahoo.com');
+INSERT INTO CLIENTI VALUES (NEXT_ID_CLIENTI.NEXTVAL, 'Rotaru','Cristina','0700569254','cristina_rotaru32@yahoo.com');
+INSERT INTO CLIENTI VALUES (NEXT_ID_CLIENTI.NEXTVAL, 'Iacob','Andreea','0721385065','icob_andreea@yahoo.com');
+
+COMMIT;
+
+CREATE TABLE COMENZI (
+    id_comanda  number(5) NOT NULL PRIMARY KEY, 
+    id_client number(5), 
+    data date NOT NULL,
+    valoarea number(4) NOT NULL,
+    constraint id_client FOREIGN KEY(id_client) REFERENCES CLIENTI(id_client)
+);
+
+
+INSERT INTO COMENZI VALUES (10, 101 ,to_date('10-05-2021', 'dd-mm-yyyy'),150);
+INSERT INTO COMENZI VALUES (11, 102 ,to_date('15-04-2021', 'dd-mm-yyyy'),30);
+INSERT INTO COMENZI VALUES (12, 104 ,to_date('10-05-2021', 'dd-mm-yyyy'),120);
+INSERT INTO COMENZI VALUES (13, 103 ,to_date('25-03-2020', 'dd-mm-yyyy'),240);
+INSERT INTO COMENZI VALUES (14, 105 ,to_date('12-12-2020', 'dd-mm-yyyy'),120);
+INSERT INTO COMENZI VALUES (15, 101 ,to_date('30-01-2021', 'dd-mm-yyyy'),12);
+INSERT INTO COMENZI VALUES (16, 106 ,to_date('30-05-2021', 'dd-mm-yyyy'),24);
+INSERT INTO COMENZI VALUES (17,106 ,to_date('30-06-2021', 'dd-mm-yyyy'),170);
+
+COMMIT;
+
+CREATE TABLE ANGAJATI (
+    id_angajat  number(5) NOT NULL PRIMARY KEY, 
+    nume char(25) NOT NULL,
+    prenume char(25) NOT NULL,
+    job char(25) NOT NULL,
+    telefon  char(10) NOT NULL , 
+    salariu number(6)NOT NULL,
+    data_angajarii date NOT NULL,
+    aplicatie char(25),
+    UNIQUE(telefon)
+    
+   
+);
+
+CREATE SEQUENCE NEXT_ID_ANGAJATI
+INCREMENT by 1
+START WITH 100
+MAXVALUE 99999
+NOCYCLE;
+
+INSERT INTO ANGAJATI VALUES (NEXT_ID_ANGAJATI.NEXTVAL, 'Ion','Loredana','executant','0245222162',1500,to_date('10-05-2021', 'dd-mm-yyyy'),NULL);
+INSERT INTO ANGAJATI VALUES (NEXT_ID_ANGAJATI.NEXTVAL, 'Andreescu','Daiana','proiectant','0745222163',1800,to_date('09-01-2010', 'dd-mm-yyyy'),'Fusion360');
+INSERT INTO ANGAJATI VALUES (NEXT_ID_ANGAJATI.NEXTVAL, 'Ramond','Liliana','agent','0745228182',3000,to_date('14-06-2019', 'dd-mm-yyyy'),NULL);
+INSERT INTO ANGAJATI VALUES (NEXT_ID_ANGAJATI.NEXTVAL, 'Flo','Luis','proiectant','0245552168',4500,to_date('25-05-2018', 'dd-mm-yyyy'),'Creo');
+INSERT INTO ANGAJATI VALUES (NEXT_ID_ANGAJATI.NEXTVAL, 'Dan','Cornelia','proiectant','0243722175',1500,to_date('11-08-2019', 'dd-mm-yyyy'),'Fusion360');
+INSERT INTO ANGAJATI VALUES (NEXT_ID_ANGAJATI.NEXTVAL, 'Remus','Denis','executant','0245722196',6500,to_date('10-05-2015', 'dd-mm-yyyy'),NULL);
+INSERT INTO ANGAJATI VALUES (NEXT_ID_ANGAJATI.NEXTVAL, 'Ion','Gabriel','agent','0712125866',3000,to_date('14-06-2020', 'dd-mm-yyyy'),NULL);
+
+COMMIT;
+
+
+
+CREATE TABLE PRODUSE (
+    id_produs  number(5) NOT NULL PRIMARY KEY, 
+    id_categorie  number(5),
+    id_filament  number(5),
+    nume char(25) NOT NULL,
+    pret_vanzare number(3) NOT NULL,
+    cost_producere number(3),
+    cantitate_filament number(4) NOT NULL,
+    dimensiune number(5) NOT NULL,
+    greutate number(5),
+    personalizabil number(1)  DEFAULT 0,
+constraint id_categorie FOREIGN KEY(id_categorie) REFERENCES CATEGORIE(id_categorie),
+constraint id_filament FOREIGN KEY(id_filament) REFERENCES FILAMENT(id_filament)
+);
+
+
+INSERT INTO PRODUSE VALUES (119,102 ,101,'Lampa',120,50,30,25,80,1);
+INSERT INTO PRODUSE VALUES (120,101 ,101,'Suport chei',50,NULL,15,25,80,1);
+INSERT INTO PRODUSE VALUES (121,102 ,103,'Cub',100,NULL,30,900,NULL,0);
+INSERT INTO PRODUSE VALUES (122,103 ,106,'Suport cu incarcator',12,NULL,30,25,50,0);
+INSERT INTO PRODUSE VALUES (123,106,102,'Tablou licheni',40,NULL,30,800,NULL,0);
+INSERT INTO PRODUSE VALUES (124,106 ,105,'Terariu',70,50,30,40,NULL,0);
+INSERT INTO PRODUSE VALUES (125,104 ,102,'Mingie',10,3,30,9,30,0);
+INSERT INTO PRODUSE VALUES (126,101 ,104,'Oaie-suport',30,5,10,10,NULL,0);
+INSERT INTO PRODUSE VALUES (127,105 ,101,'Cutie labirint',24,10,5,9,10,0);
+
+
+COMMIT;
+
+CREATE TABLE RECENZIE (
+    id_recenzie  number(5) NOT NULL PRIMARY KEY, 
+    id_produs  number(5),
+    id_client  number(5),
+    nr_stelute char(5) NOT NULL,
+constraint fk_id_produs FOREIGN KEY(id_produs) REFERENCES PRODUSE(id_produs),
+constraint fk_id_client FOREIGN KEY(id_client) REFERENCES CLIENTI(id_client)
+);
+
+
+CREATE SEQUENCE NEXT_ID_RECENZIE
+INCREMENT by 1
+START WITH 100
+MAXVALUE 99999
+NOCYCLE;
+
+INSERT INTO RECENZIE VALUES (NEXT_ID_RECENZIE.NEXTVAL,119 ,101,'*****');
+INSERT INTO RECENZIE VALUES (NEXT_ID_RECENZIE.NEXTVAL,122 ,103,'***');
+INSERT INTO RECENZIE VALUES (NEXT_ID_RECENZIE.NEXTVAL,127 ,101,'*');
+INSERT INTO RECENZIE VALUES (NEXT_ID_RECENZIE.NEXTVAL,127 ,104,'*****');
+INSERT INTO RECENZIE VALUES (NEXT_ID_RECENZIE.NEXTVAL,126 ,106,'***');
+INSERT INTO RECENZIE VALUES (NEXT_ID_RECENZIE.NEXTVAL,120 ,106,'****');
+
+COMMIT;
+
+CREATE TABLE ACHIZITIE (
+    data date, 
+    id_furnizor  number(5),
+    id_filament  number(5),
+   
+constraint fk_furnizor FOREIGN KEY(id_furnizor) REFERENCES FURNIZOR(id_furnizor),
+constraint fk_filament FOREIGN KEY(id_filament) REFERENCES FILAMENT(id_filament),
+constraint pk_compus  PRIMARY KEY(id_filament,id_furnizor,data)
+);
+
+
+INSERT INTO ACHIZITIE VALUES(to_date('12-05-2020', 'dd-mm-yyyy'), 102, 101 );
+INSERT INTO ACHIZITIE VALUES(to_date('25-06-2021', 'dd-mm-yyyy'), 102, 103 );
+INSERT INTO ACHIZITIE VALUES(to_date('03-01-2020', 'dd-mm-yyyy'), 102, 101 );
+INSERT INTO ACHIZITIE VALUES(to_date('11-05-2021', 'dd-mm-yyyy'), 103, 106 );
+INSERT INTO ACHIZITIE VALUES(to_date('02-08-2019', 'dd-mm-yyyy'), 104, 102 );
+INSERT INTO ACHIZITIE VALUES(to_date('01-05-2021', 'dd-mm-yyyy'), 106, 104 );
+INSERT INTO ACHIZITIE VALUES(to_date('12-12-2020', 'dd-mm-yyyy'), 105, 105 );
+INSERT INTO ACHIZITIE VALUES(to_date('24-03-2021', 'dd-mm-yyyy'), 106, 102 );
+INSERT INTO ACHIZITIE VALUES(to_date('12-12-2020', 'dd-mm-yyyy'), 101, 105 );
+INSERT INTO ACHIZITIE VALUES(to_date('12-05-2020', 'dd-mm-yyyy'), 101, 105 );
+INSERT INTO ACHIZITIE VALUES(to_date('12-04-2019', 'dd-mm-yyyy'), 103, 106 );
+
+commit;
+
+CREATE TABLE COMPATIBILITATE (
+    id_imprimanta  number(5),
+    id_filament  number(5),
+   
+constraint fk_imprimanta FOREIGN KEY(id_imprimanta) REFERENCES IMPRIMANTE(id_imprimanta),
+constraint fk_fil FOREIGN KEY(id_filament) REFERENCES FILAMENT(id_filament),
+constraint pk_compus_comp  PRIMARY KEY(id_filament,id_imprimanta)
+);
+
+INSERT INTO COMPATIBILITATE VALUES(20, 104 );
+INSERT INTO COMPATIBILITATE VALUES(30, 105 );
+INSERT INTO COMPATIBILITATE VALUES(30, 101 );
+INSERT INTO COMPATIBILITATE VALUES(30, 106 );
+INSERT INTO COMPATIBILITATE VALUES(40, 102 );
+INSERT INTO COMPATIBILITATE VALUES(50, 102 );
+INSERT INTO COMPATIBILITATE VALUES(50, 103 );
+INSERT INTO COMPATIBILITATE VALUES(60, 106 );
+INSERT INTO COMPATIBILITATE VALUES(60, 102 );
+INSERT INTO COMPATIBILITATE VALUES(70, 104 );
+INSERT INTO COMPATIBILITATE VALUES(70, 103 );
+commit;
+
+CREATE TABLE CULOARE_FILAMENT (
+    id_filament  number(5),
+    id_culoare  number(5),
+   
+constraint fk_culoare FOREIGN KEY(id_culoare) REFERENCES CULORI(id_culoare),
+constraint fk_filam FOREIGN KEY(id_filament) REFERENCES FILAMENT(id_filament),
+constraint pk_compus_fil  PRIMARY KEY(id_filament,id_culoare)
+);
+
+
+
+INSERT INTO CULOARE_FILAMENT VALUES(101, 2 );
+INSERT INTO CULOARE_FILAMENT VALUES(102, 7 );
+INSERT INTO CULOARE_FILAMENT VALUES(103, 4 );
+INSERT INTO CULOARE_FILAMENT VALUES(104, 3 );
+INSERT INTO CULOARE_FILAMENT VALUES(105, 2 );
+INSERT INTO CULOARE_FILAMENT VALUES(106, 7 );
+INSERT INTO CULOARE_FILAMENT VALUES(104, 5 );
+INSERT INTO CULOARE_FILAMENT VALUES(104, 4 );
+INSERT INTO CULOARE_FILAMENT VALUES(102, 3 );
+INSERT INTO CULOARE_FILAMENT VALUES(105, 5 );
+INSERT INTO CULOARE_FILAMENT VALUES(103, 5 );
+INSERT INTO CULOARE_FILAMENT VALUES(106, 2 );
+
+COMMIT;
+
+CREATE TABLE REALIZARE (
+    id_produs  number(5),
+    id_proiectant  number(5),
+    id_executant  number(5),
+    durata number(4),
+constraint fk_produs FOREIGN KEY(id_produs) REFERENCES PRODUSE(id_produs),
+constraint fk_proiectant FOREIGN KEY(id_proiectant) REFERENCES ANGAJATI(id_angajat),
+constraint fk_executant FOREIGN KEY( id_executant) REFERENCES ANGAJATI(id_angajat),
+constraint pk_compus_realiz  PRIMARY KEY(id_produs, id_executant,id_proiectant)
+);
+
+INSERT INTO REALIZARE VALUES(119,102,106,850 );
+INSERT INTO REALIZARE VALUES(120,104,101,200 );
+INSERT INTO REALIZARE VALUES(121,105,101,45 );
+INSERT INTO REALIZARE VALUES(122,105,106,80 );
+INSERT INTO REALIZARE VALUES(123,104,106,96 );
+INSERT INTO REALIZARE VALUES(124,104,106,1500 );
+INSERT INTO REALIZARE VALUES(125,104,106,450 );
+INSERT INTO REALIZARE VALUES(126,105,101,200 );
+INSERT INTO REALIZARE VALUES(127,102,101,15 );
+INSERT INTO REALIZARE VALUES(121,102,101,45 );
+INSERT INTO REALIZARE VALUES(124,104,101,1500 );
+
+commit;
+
+CREATE TABLE COMUNICARE (
+    id_client  number(5),
+    id_agent  number(5),
+
+constraint fk_client FOREIGN KEY(id_client) REFERENCES CLIENTI(id_client),
+constraint fk_agent FOREIGN KEY(id_agent) REFERENCES ANGAJATI(id_angajat),
+constraint pk_compus_com  PRIMARY KEY(id_client, id_agent)
+);
+
+INSERT INTO COMUNICARE VALUES(101,103);
+INSERT INTO COMUNICARE VALUES(102,103);
+INSERT INTO COMUNICARE VALUES(103,103);
+INSERT INTO COMUNICARE VALUES(104,103);
+INSERT INTO COMUNICARE VALUES(105,103);
+INSERT INTO COMUNICARE VALUES(106,103);
+INSERT INTO COMUNICARE VALUES(103,107);
+INSERT INTO COMUNICARE VALUES(104,107);
+INSERT INTO COMUNICARE VALUES(105,107);
+INSERT INTO COMUNICARE VALUES(106,107);
+
+commit;
+
+CREATE TABLE CUPRINS_COMENZI (
+    id_comanda  number(5),
+    id_produs  number(5),
+    bucati number(3),
+
+constraint fk_comanda FOREIGN KEY(id_comanda) REFERENCES COMENZI(id_comanda),
+constraint fk_prod FOREIGN KEY(id_produs) REFERENCES PRODUSE(id_produs),
+constraint pk_compus_cuprins  PRIMARY KEY(id_comanda, id_produs)
+);
+
+
+
+INSERT INTO CUPRINS_COMENZI VALUES(10,120,1);
+INSERT INTO CUPRINS_COMENZI VALUES(10,121,1);
+INSERT INTO CUPRINS_COMENZI VALUES(11,126,1);
+INSERT INTO CUPRINS_COMENZI VALUES(12,119,1);
+INSERT INTO CUPRINS_COMENZI VALUES(13,119,2);
+INSERT INTO CUPRINS_COMENZI VALUES(14,119,1);
+INSERT INTO CUPRINS_COMENZI VALUES(15,122,1);
+INSERT INTO CUPRINS_COMENZI VALUES(16,127,1);
+INSERT INTO CUPRINS_COMENZI VALUES(17,121,1);
+INSERT INTO CUPRINS_COMENZI VALUES(17,124,1);
+commit;
+
+
+
+--6
+CREATE OR REPLACE TYPE colegi AS VARRAY(100) OF CHAR(5);
+CREATE OR REPLACE TYPE produse_realizate IS TABLE OF NUMBER(5);
+
+CREATE TABLE info_produse_realizate(id_angajat NUMBER(5), 
+                                    produse produse_realizate,
+                                    pret_total NUMBER,
+                                    colaborare colegi)
+NESTED TABLE produse STORE AS produse_r;  
+-------------------  
+CREATE OR REPLACE PROCEDURE info_angajat
+    (v_cod angajati.id_angajat%TYPE) 
+    IS 
+        pret_total number(5) :=0;
+        produse_aux produse_realizate := produse_realizate();
+        colegi_aux colegi := colegi();
+        job_aux angajati.job%TYPE;  
+        ok_p BOOLEAN;
+        ok_e BOOLEAN;
+        cnt NUMBER(2);
+            
+BEGIN 
+        SELECT job INTO job_aux
+        FROM angajati
+        WHERE id_angajat = v_cod;
+        
+        IF job_aux = 'agent' THEN INSERT INTO info_produse_realizate VALUES (v_cod, NULL,NULL,NULL);
+        ELSE
+            
+             pret_total :=0;
+            FOR i IN (SELECT DISTINCT p.id_produs, p.pret_vanzare, a.id_angajat
+                      FROM PRODUSE p JOIN REALIZARE r ON (p.id_produs=r.id_produs)
+                                     JOIN ANGAJATI a ON (a.id_angajat=r.id_executant OR a.id_angajat=r.id_proiectant)
+                      WHERE id_angajat=v_cod) LOOP
+                      
+                      pret_total := pret_total + i.pret_vanzare;
+                      
+                      produse_aux.extend;
+                      produse_aux(produse_aux.last) := i.id_produs; 
+                      
+            END LOOP;
+                        
+            FOR i IN (SELECT id_produs
+                      FROM realizare
+                      WHERE id_executant=v_cod OR id_proiectant=v_cod) LOOP
+                      
+                      FOR j IN (SELECT id_proiectant,id_executant
+                                FROM REALIZARE
+                                WHERE id_produs = i.id_produs) LOOP
+                                
+                                
+                                ok_p := TRUE;
+                                ok_e := TRUE;
+                                
+                              IF j.id_proiectant = v_cod THEN ok_p :=FALSE; 
+                              ELSIF j.id_executant = v_cod THEN ok_e :=FALSE;
+                              END IF;
+                                                           
+                            cnt := colegi_aux.COUNT;    
+                            FOR k IN 1..cnt LOOP 
+                                 IF j.id_proiectant = colegi_aux(k) THEN ok_p :=FALSE;    
+                                 ELSIF j.id_executant = colegi_aux(k) THEN ok_e :=FALSE;
+                                 END IF; 
+                            END LOOP; 
+
+
+                            IF ok_p=TRUE THEN colegi_aux.extend; 
+                                               colegi_aux(colegi_aux.last):= j.id_proiectant;  
+                                END IF;
+                                IF ok_e=TRUE THEN colegi_aux.extend; 
+                                               colegi_aux(colegi_aux.last):= j.id_executant;            
+                                END IF;                                
+                      END LOOP;
+                                   
+            END LOOP;
+          
+           INSERT INTO info_produse_realizate VALUES (v_cod, produse_aux, pret_total, colegi_aux);
+        END IF;
+EXCEPTION 
+    WHEN NO_DATA_FOUND THEN DBMS_OUTPUT.PUT_LINE('Nu exista acest angajat');
+END info_angajat; 
+
+BEGIN 
+     info_angajat(101);
+     info_angajat(103); --NULL (este agent)
+     info_angajat(200);--No_data_found  
+END;
+
+select * from info_produse_realizate;
+
+
+--7
+
+CREATE OR REPLACE FUNCTION stelute_produs --subprogramul calculeaza numarul de stele total al unui produs
+    (v_cod produse.id_produs%TYPE) 
+    RETURN NUMBER IS 
+    stele_total  NUMBER:=0;
+    stele  recenzie.nr_stelute%TYPE;
+    nr    NUMBER;
+        CURSOR c IS
+            SELECT  r.nr_stelute, CASE    
+                                WHEN r.id_produs IN (SELECT id_produs FROM RECENZIE) THEN (SELECT COUNT(*) FROM RECENZIE re WHERE re.id_produs = r.id_produs)
+                                ELSE 0
+                                END As nr
+            FROM RECENZIE r FULL OUTER JOIN PRODUSE p ON (p.id_produs = r.id_produs)
+            WHERE r.id_produs = v_cod; 
+BEGIN 
+        OPEN c;
+        LOOP FETCH c INTO stele, nr;
+            EXIT WHEN c%NOTFOUND;
+            
+            IF stele = '*' THEN stele_total := stele_total + 1;
+            ELSIF stele = '**' THEN stele_total := stele_total + 2;
+            ELSIF stele = '***' THEN stele_total := stele_total + 3;
+            ELSIF stele = '****' THEN stele_total := stele_total + 4;
+            ELSE  stele_total := stele_total + 5;
+            END IF;
+                        
+        END LOOP;
+        CLOSE c;
+        IF nr>0 THEN stele_total := stele_total/nr;
+        ELSE stele_total := 0;
+        END IF;
+     
+     RETURN stele_total;
+EXCEPTION 
+    WHEN NO_DATA_FOUND THEN DBMS_OUTPUT.PUT_LINE('Nu exista acest produs');
+END stelute_produs; 
+
+DECLARE
+    CURSOR c IS
+            SELECT id_produs
+            FROM PRODUSE; 
+    maxi NUMBER :=0;
+    stele NUMBER;
+BEGIN 
+    FOR i in c LOOP
+        stele := stelute_produs(i.id_produs);
+        DBMS_OUTPUT.PUT_LINE('Produsul '||i.id_produs||' are '||stele||' stelute;'); 
+        IF maxi < stele THEN maxi :=stele;  END IF;       
+    END LOOP;    
+    
+    DBMS_OUTPUT.NEW_LINE; 
+    
+     FOR i in c LOOP
+        stele := stelute_produs(i.id_produs);
+        IF maxi = stele THEN DBMS_OUTPUT.PUT_LINE('Produsul '||i.id_produs||' are cel mai mare nr. de stelute');   END IF;       
+     END LOOP;
+END;
+
+--8
+CREATE OR REPLACE FUNCTION imprimante_categorie
+    (v_nume categorie.nume%TYPE) 
+    RETURN NUMBER IS 
+        numar_imprimante NUMBER; 
+        cod NUMBER; 
+        
+        TYPE imprimante IS TABLE OF NUMBER;
+        imp imprimante := imprimante();
+        
+        CURSOR c IS
+            SELECT c.id_categorie,c.nume, i.id_imprimanta, i.dimensiune_pat, p.dimensiune 
+            FROM CATEGORIE c JOIN PRODUSE p ON (c.id_categorie = p.id_categorie)
+                             JOIN FILAMENT f ON (f.id_filament = p.id_filament)
+                             JOIN COMPATIBILITATE co ON (f.id_filament = co.id_filament)
+                             JOIN IMPRIMANTE i ON (i.id_imprimanta = co.id_imprimanta)
+            WHERE c.nume = v_nume;
+BEGIN 
+    numar_imprimante := 0;
+        
+    SELECT id_categorie INTO cod
+    FROM CATEGORIE
+    WHERE v_nume = nume;
+    
+    DBMS_OUTPUT.PUT_LINE('Pentru categoria '||v_nume||', cu codul '||cod||', sunt complet compatibile urmatoarele imprimante:'); 
+    FOR i IN c LOOP
+        IF i.dimensiune < i.dimensiune_pat THEN 
+            imp.EXTEND();
+            imp(imp.last):=i.id_imprimanta;
+        END IF;
+    END LOOP;
+    
+    numar_imprimante:= imp.count;
+        IF numar_imprimante = 0 THEN 
+            DBMS_OUTPUT.PUT_LINE('Nu exista imprimante complet compatibile');  
+        ELSE 
+            FOR j IN imp.first..imp.last LOOP
+             DBMS_OUTPUT.PUT_LINE(imp(j)); 
+            END LOOP;
+        END IF;
+    
+    RETURN numar_imprimante;
+    
+EXCEPTION 
+    WHEN NO_DATA_FOUND THEN 
+                    RAISE_APPLICATION_ERROR(-20000, 'Nu exista o categorie cu acest nume!');
+    WHEN OTHERS THEN 
+                    RAISE_APPLICATION_ERROR(-20002,'Alta eroare!'); 
+END imprimante_categorie; 
+----------
+INSERT INTO CATEGORIE VALUES (107, 'Diverse');
+BEGIN 
+    DBMS_OUTPUT.PUT_LINE('Nr de imprimante complet compatibile este '|| imprimante_categorie('Home')); -- corect. nr > 0
+    DBMS_OUTPUT.PUT_LINE('Nr de imprimante complet compatibile este '|| imprimante_categorie('Diverse')); --corect, nr = 0
+    DBMS_OUTPUT.PUT_LINE('Nr de imprimante complet compatibile este '|| imprimante_categorie('Food')); -- NO_DATA_FOUND
+END; 
+
+--9
+CREATE OR REPLACE PROCEDURE data_produse
+    (v_data achizitie.data%TYPE) 
+    IS 
+        v_furnizor furnizor.denumirea%TYPE; 
+         
+        TYPE produse IS TABLE OF CHAR(25);
+        p produse := produse();
+        
+        CURSOR c IS
+            SELECT fu.denumirea,a.data, p.nume
+            FROM PRODUSE p JOIN FILAMENT f ON (f.id_filament = p.id_filament)
+                           JOIN ACHIZITIE a ON (a.id_filament = f.id_filament)
+                           JOIN FURNIZOR fu ON (fu.id_furnizor = a.id_furnizor)
+                           JOIN RECENZIE r ON (r.id_produs = p.id_produs)
+                           JOIN CLIENTI c ON (r.id_client = c.id_client)   
+            WHERE r.nr_stelute <> '*' AND c.id_client IN (SELECT id_client FROM COMUNICARE) AND a.data = v_data;
+        
+BEGIN 
+          
+    SELECT fu.denumirea INTO v_furnizor
+    FROM ACHIZITIE a JOIN FURNIZOR fu ON (fu.id_furnizor = a.id_furnizor)
+    WHERE v_data = a.data;
+    
+    DBMS_OUTPUT.PUT_LINE('In data '||v_data||' s-a achizitionat filament de la furnizorul '||v_furnizor); 
+    FOR i IN c LOOP
+            p.EXTEND();
+            p(p.last):=i.nume;    
+    END LOOP;
+    
+        IF p.COUNT = 0 THEN 
+            DBMS_OUTPUT.PUT_LINE('Nu exista produse');  
+        ELSE 
+            FOR j IN p.first..p.last LOOP
+             DBMS_OUTPUT.PUT_LINE(p(j)); 
+            END LOOP;
+             DBMS_OUTPUT.NEW_LINE; 
+        END IF;
+    
+EXCEPTION 
+    WHEN NO_DATA_FOUND THEN 
+                    RAISE_APPLICATION_ERROR(-20000, 'Nu exista aceasta data!');
+    WHEN TOO_MANY_ROWS THEN 
+                    RAISE_APPLICATION_ERROR(-20000, 'Exista mai multe date la fel!');
+    WHEN OTHERS THEN 
+                    RAISE_APPLICATION_ERROR(-20002,'Alta eroare!'); 
+END data_produse; 
+----------
+INSERT INTO FILAMENT VALUES (107, 'TPU', NULL, NULL);
+INSERT INTO ACHIZITIE VALUES ('15-MAY-21',106,107);
+
+BEGIN 
+    data_produse('3-JAN-2020'); -- corect, produse >0
+    data_produse('15-MAY-21'); -- corect, produse <0
+    data_produse('30-JAN-2020'); -- NO_DATA_FOUND
+    data_produse('12-MAY-2020'); -- TOO_MANY_ROWS
+END; 
+
+--10
+CREATE OR REPLACE TRIGGER trig_achizitie
+   AFTER INSERT OR UPDATE ON ACHIZITIE
+DECLARE
+    TYPE refcursor IS REF CURSOR;
+    CURSOR c_numar IS 
+        SELECT denumirea, 
+                    CURSOR (SELECT COUNT(*)
+                            FROM achizitie a
+                            WHERE a.id_furnizor = f.id_furnizor) 
+        FROM furnizor f;        
+    v_nume furnizor.denumirea%TYPE; 
+    v_cursor refcursor; 
+    v_nr NUMBER;
+BEGIN
+IF INSERTING THEN
+   DBMS_OUTPUT.PUT_LINE(USER|| ' a adaugat o noua achizitie !');
+   data_produse(SYSDATE);     
+ELSE 
+    DBMS_OUTPUT.PUT_LINE(USER|| ' a modificat(update) tabelul achizitie!');
+ END IF;
+ DBMS_OUTPUT.PUT_LINE('Numar achizitii:');
+ 
+ OPEN c_numar;
+ LOOP FETCH c_numar INTO v_nume, v_cursor;
+ EXIT WHEN c_numar%NOTFOUND; 
+      DBMS_OUTPUT.PUT_LINE ('Furnizorul '||v_nume);
+      LOOP FETCH v_cursor INTO v_nr;
+      EXIT WHEN v_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE (v_nr); 
+      END LOOP; 
+END LOOP; 
+CLOSE c_numar; 
+END;
+/
+-- declansare trigger
+INSERT INTO ACHIZITIE VALUES(SYSDATE, 101, 106 );
+UPDATE ACHIZITIE SET id_furnizor = 105 WHERE id_furnizor = '106';
+
+
+--11
+CREATE OR REPLACE TRIGGER trig_angajati
+    BEFORE UPDATE OR INSERT ON ANGAJATI
+    FOR EACH ROW 
+DECLARE
+    ok number :=0;
+BEGIN 
+    IF INSERTING THEN
+        IF (:NEW.job = 'agent') THEN
+        INSERT INTO info_produse_realizate VALUES (:NEW.id_angajat,NULL,NULL,NULL);
+        END IF;
+    ELSIF UPDATING THEN
+        IF (:NEW.job <> 'agent') AND (:NEW.salariu > :OLD.salariu) THEN
+            
+            FOR i IN (SELECT DISTINCT r.id_produs
+                      FROM REALIZARE r JOIN PRODUSE p ON (r.id_produs = p.id_produs)
+                                        JOIN RECENZIE rec ON (rec.id_produs = p.id_produs)
+                      WHERE r.id_proiectant = :OLD.id_angajat OR r.id_executant = :OLD.id_angajat) LOOP
+                IF stelute_produs(i.id_produs) = 5 THEN ok:=1;
+                END IF;
+            END LOOP;
+            
+            IF ok=0 THEN
+            RAISE_APPLICATION_ERROR(-20001,'Nu se poate marii salariul - niciun produs nu are rating maxim');
+            END IF;
+        END IF;
+    END IF;
+END;
+/
+
+INSERT INTO ANGAJATI VALUES (200, 'Ion','Ion','agent','0760606060',3000,SYSDATE,NULL);--merge
+UPDATE angajati SET salariu = salariu*1.1 WHERE id_angajat = '102'; --merge
+UPDATE angajati SET salariu = salariu*1.1 WHERE id_angajat = '105'; --eroare din trigger
+
+--12
+CREATE TABLE admin_baza (data TIMESTAMP(3),
+                        tabel_afectat VARCHAR2(50),
+                        tipul_comenzii VARCHAR2(30));
+
+CREATE OR REPLACE TRIGGER trig_admin --trigger LDD
+AFTER CREATE OR DROP OR ALTER ON SCHEMA
+BEGIN
+     IF USER <> 'ALEXION2001' THEN
+            RAISE_APPLICATION_ERROR(-20010, 'Nu sunteti admin!');
+     ELSE 
+            INSERT INTO admin_baza VALUES (SYSTIMESTAMP(3),SYS.DICTIONARY_OBJ_NAME ,SYS.SYSEVENT);
+     END IF;    
+END;
+/
+CREATE TABLE tabel_test(numar NUMBER);
+ALTER TABLE tabel_test ADD nume VARCHAR(10);
+DROP TABLE tabel_test;
+
+select * from admin_baza;
+
+--13
+CREATE OR REPLACE PACKAGE pachet_13 AS --pachetul contine cele 4 subprograme stocate de la ex 6-9
+FUNCTION imprimante_categorie (v_nume categorie.nume%TYPE) 
+    RETURN NUMBER;     
+FUNCTION stelute_produs (v_cod produse.id_produs%TYPE) 
+    RETURN NUMBER;     
+PROCEDURE data_produse(v_data achizitie.data%TYPE); 
+PROCEDURE info_angajat(v_cod angajati.id_angajat%TYPE);
+End pachet_13;
+/
+
+
+CREATE OR REPLACE PACKAGE BODY pachet_13 AS 
+    FUNCTION imprimante_categorie
+        (v_nume categorie.nume%TYPE) 
+        RETURN NUMBER IS 
+            numar_imprimante NUMBER; 
+            cod NUMBER; 
+    
+            TYPE imprimante IS TABLE OF NUMBER;
+            imp imprimante := imprimante();
+    
+            CURSOR c IS
+                SELECT c.id_categorie,c.nume, i.id_imprimanta, i.dimensiune_pat, p.dimensiune 
+                FROM CATEGORIE c JOIN PRODUSE p ON (c.id_categorie = p.id_categorie)
+                                 JOIN FILAMENT f ON (f.id_filament = p.id_filament)
+                                 JOIN COMPATIBILITATE co ON (f.id_filament = co.id_filament)
+                                 JOIN IMPRIMANTE i ON (i.id_imprimanta = co.id_imprimanta)
+                WHERE c.nume = v_nume;
+    BEGIN 
+        numar_imprimante := 0;
+    
+        SELECT id_categorie INTO cod
+        FROM CATEGORIE
+        WHERE v_nume = nume;
+    
+        DBMS_OUTPUT.PUT_LINE('Pentru categoria '||v_nume||', cu codul '||cod||', sunt complet compatibile urmatoarele imprimante:'); 
+        FOR i IN c LOOP
+            IF i.dimensiune < i.dimensiune_pat THEN 
+                imp.EXTEND();
+                imp(imp.last):=i.id_imprimanta;
+            END IF;
+        END LOOP;
+    
+        numar_imprimante:= imp.count;
+            IF numar_imprimante = 0 THEN 
+                DBMS_OUTPUT.PUT_LINE('Nu exista imprimante complet compatibile');  
+            ELSE 
+                FOR j IN imp.first..imp.last LOOP
+                 DBMS_OUTPUT.PUT_LINE(imp(j)); 
+                END LOOP;
+            END IF;
+    
+        RETURN numar_imprimante;
+
+    EXCEPTION 
+        WHEN NO_DATA_FOUND THEN 
+                        RAISE_APPLICATION_ERROR(-20000, 'Nu exista o categorie cu acest nume!');
+        WHEN OTHERS THEN 
+                        RAISE_APPLICATION_ERROR(-20002,'Alta eroare!'); 
+    END imprimante_categorie; 
+
+         FUNCTION stelute_produs 
+            (v_cod produse.id_produs%TYPE) 
+            RETURN NUMBER IS 
+            stele_total  NUMBER:=0;
+            stele  recenzie.nr_stelute%TYPE;
+            nr    NUMBER;
+                CURSOR c IS
+                    SELECT  r.nr_stelute, CASE    
+                                        WHEN r.id_produs IN (SELECT id_produs FROM RECENZIE) THEN (SELECT COUNT(*) FROM RECENZIE re WHERE re.id_produs = r.id_produs)
+                                        ELSE 0
+                                        END As nr
+                    FROM RECENZIE r FULL OUTER JOIN PRODUSE p ON (p.id_produs = r.id_produs)
+                    WHERE r.id_produs = v_cod; 
+        BEGIN 
+                OPEN c;
+                LOOP FETCH c INTO stele, nr;
+                    EXIT WHEN c%NOTFOUND;
+        
+                    IF stele = '*' THEN stele_total := stele_total + 1;
+                    ELSIF stele = '**' THEN stele_total := stele_total + 2;
+                    ELSIF stele = '***' THEN stele_total := stele_total + 3;
+                    ELSIF stele = '****' THEN stele_total := stele_total + 4;
+                    ELSE  stele_total := stele_total + 5;
+                    END IF;
+        
+                END LOOP;
+                CLOSE c;
+                IF nr>0 THEN stele_total := stele_total/nr;
+                ELSE stele_total := 0;
+                END IF;
+        
+             RETURN stele_total;
+        EXCEPTION 
+            WHEN NO_DATA_FOUND THEN DBMS_OUTPUT.PUT_LINE('Nu exista acest produs');
+        END stelute_produs; 
+
+     PROCEDURE data_produse
+        (v_data achizitie.data%TYPE) 
+        IS 
+            v_furnizor furnizor.denumirea%TYPE; 
+    
+            TYPE produse IS TABLE OF CHAR(25);
+            p produse := produse();
+    
+            CURSOR c IS
+                SELECT fu.denumirea,a.data, p.nume
+                FROM PRODUSE p JOIN FILAMENT f ON (f.id_filament = p.id_filament)
+                               JOIN ACHIZITIE a ON (a.id_filament = f.id_filament)
+                               JOIN FURNIZOR fu ON (fu.id_furnizor = a.id_furnizor)
+                               JOIN RECENZIE r ON (r.id_produs = p.id_produs)
+                               JOIN CLIENTI c ON (r.id_client = c.id_client)   
+                WHERE r.nr_stelute <> '*' AND c.id_client IN (SELECT id_client FROM COMUNICARE) AND a.data = v_data;
+    
+    BEGIN 
+    
+        SELECT fu.denumirea INTO v_furnizor
+        FROM ACHIZITIE a JOIN FURNIZOR fu ON (fu.id_furnizor = a.id_furnizor)
+        WHERE v_data = a.data;
+    
+        DBMS_OUTPUT.PUT_LINE('In data '||v_data||' s-a achizitionat filament de la furnizorul '||v_furnizor); 
+        FOR i IN c LOOP
+                p.EXTEND();
+                p(p.last):=i.nume;    
+        END LOOP;
+    
+            IF p.COUNT = 0 THEN 
+                DBMS_OUTPUT.PUT_LINE('Nu exista produse');  
+            ELSE 
+                FOR j IN p.first..p.last LOOP
+                 DBMS_OUTPUT.PUT_LINE(p(j)); 
+                END LOOP;
+                 DBMS_OUTPUT.NEW_LINE; 
+            END IF;
+    
+    EXCEPTION 
+        WHEN NO_DATA_FOUND THEN 
+                        RAISE_APPLICATION_ERROR(-20000, 'Nu exista aceasta data!');
+        WHEN TOO_MANY_ROWS THEN 
+                        RAISE_APPLICATION_ERROR(-20000, 'Exista mai multe date la fel!');
+        WHEN OTHERS THEN 
+                        RAISE_APPLICATION_ERROR(-20002,'Alta eroare!'); 
+    END data_produse; 
+    
+     PROCEDURE info_angajat
+        (v_cod angajati.id_angajat%TYPE) 
+        IS 
+            pret_total number(5) :=0;
+            produse_aux produse_realizate := produse_realizate();
+            colegi_aux colegi := colegi();
+            job_aux angajati.job%TYPE;  
+            ok_p BOOLEAN;
+            ok_e BOOLEAN;
+            cnt NUMBER(2);
+    
+    BEGIN 
+            SELECT job INTO job_aux
+            FROM angajati
+            WHERE id_angajat = v_cod;
+    
+            IF job_aux = 'agent' THEN INSERT INTO info_produse_realizate VALUES (v_cod, NULL,NULL,NULL);
+            ELSE
+    
+                 pret_total :=0;
+                FOR i IN (SELECT DISTINCT p.id_produs, p.pret_vanzare, a.id_angajat
+                          FROM PRODUSE p JOIN REALIZARE r ON (p.id_produs=r.id_produs)
+                                         JOIN ANGAJATI a ON (a.id_angajat=r.id_executant OR a.id_angajat=r.id_proiectant)
+                          WHERE id_angajat=v_cod) LOOP
+    
+                          pret_total := pret_total + i.pret_vanzare;
+    
+                          produse_aux.extend;
+                          produse_aux(produse_aux.last) := i.id_produs; 
+    
+                END LOOP;
+    
+                FOR i IN (SELECT id_produs
+                          FROM realizare
+                          WHERE id_executant=v_cod OR id_proiectant=v_cod) LOOP
+    
+                          FOR j IN (SELECT id_proiectant,id_executant
+                                    FROM REALIZARE
+                                    WHERE id_produs = i.id_produs) LOOP
+    
+    
+                                    ok_p := TRUE;
+                                    ok_e := TRUE;
+    
+                                  IF j.id_proiectant = v_cod THEN ok_p :=FALSE; 
+                                  ELSIF j.id_executant = v_cod THEN ok_e :=FALSE;
+                                  END IF;
+    
+                                cnt := colegi_aux.COUNT;    
+                                FOR k IN 1..cnt LOOP 
+                                     IF j.id_proiectant = colegi_aux(k) THEN ok_p :=FALSE;    
+                                     ELSIF j.id_executant = colegi_aux(k) THEN ok_e :=FALSE;
+                                     END IF; 
+                                END LOOP; 
+    
+    
+                                IF ok_p=TRUE THEN colegi_aux.extend; 
+                                                   colegi_aux(colegi_aux.last):= j.id_proiectant;  
+                                    END IF;
+                                    IF ok_e=TRUE THEN colegi_aux.extend; 
+                                                   colegi_aux(colegi_aux.last):= j.id_executant;            
+                                    END IF;                                
+                          END LOOP;
+    
+                END LOOP;
+    
+               INSERT INTO info_produse_realizate VALUES (v_cod, produse_aux, pret_total, colegi_aux);
+            END IF;
+    EXCEPTION 
+        WHEN NO_DATA_FOUND THEN DBMS_OUTPUT.PUT_LINE('Nu exista acest angajat');
+    END info_angajat; 
+
+END pachet_13;
+
+---------
+
+EXECUTE  pachet_13.data_produse('3-JAN-2020');
+EXECUTE  pachet_13.info_angajat('102');
+BEGIN
+   dbms_output.put_line(pachet_13.imprimante_categorie('Home'));
+   dbms_output.put_line('Stelute:'||pachet_13.stelute_produs('119')); 
+END;
+/
+
+select * from info_produse_realizate where id_angajat = 102;
+
+--14
+
+CREATE OR REPLACE PACKAGE pachet_14 IS
+    TYPE clienti IS TABLE OF NUMBER(4);
+    TYPE angajati IS VARRAY(100) OF NUMBER(4);
+    
+    FUNCTION ang_max_produse RETURN angajati;
+    PROCEDURE majorare_salariu_ang;
+    
+    FUNCTION clienti_max_produse RETURN clienti;
+    PROCEDURE voucher;
+END pachet_14;
+
+
+CREATE OR REPLACE PACKAGE BODY pachet_14 IS
+    
+        FUNCTION ang_max_produse RETURN angajati IS
+            id_ang angajati := angajati();
+            maxim NUMBER;
+            CURSOR c_max IS
+                SELECT a.id_angajat,COUNT(DISTINCT r.id_produs) As nr
+                FROM REALIZARE r JOIN ANGAJATI a ON (a.id_angajat=r.id_executant OR a.id_angajat=r.id_proiectant)
+                GROUP BY a.id_angajat;  
+        BEGIN
+           SELECT MAX(nr) INTO maxim
+           FROM (SELECT a.id_angajat, COUNT(DISTINCT r.id_produs) As nr
+                 FROM REALIZARE r JOIN ANGAJATI a ON (a.id_angajat=r.id_executant OR a.id_angajat=r.id_proiectant)
+                 GROUP BY a.id_angajat);
+            
+            FOR i in c_max LOOP
+                IF i.nr = maxim THEN
+                    id_ang.EXTEND;
+                    id_ang(id_ang.LAST):=i.id_angajat;
+                END IF;
+            END LOOP;
+     
+         return id_ang;
+        END ang_max_produse;
+
+    PROCEDURE majorare_salariu_ang AS
+         id_ang angajati := angajati();
+          minim NUMBER;
+          sal NUMBER(5);
+    BEGIN 
+          id_ang :=  ang_max_produse;
+          
+          SELECT MIN(salariu) INTO minim
+          FROM angajati;
+          
+          FOR i In id_ang.FIRST..id_ang.LAST LOOP
+                SELECT salariu INTO sal
+                FROM angajati
+                WHERE id_angajat = id_ang(i); 
+                
+                IF (minim = sal) THEN
+                    UPDATE angajati
+                    SET salariu = salariu *1.1
+                    WHERE id_angajat = id_ang(i); 
+                END IF;
+                
+          END LOOP;
+    END;
+    
+    FUNCTION clienti_max_produse RETURN clienti IS
+            id_cl clienti := clienti();
+            CURSOR c IS
+                SELECT c.id_client,COUNT(cc.id_produs) As nr
+                FROM clienti c JOIN Comenzi co ON (c.id_client=co.id_client)
+                              JOIN Cuprins_Comenzi cc ON (co.id_comanda=cc.id_comanda)
+                GROUP BY c.id_client;  
+        BEGIN            
+            FOR i in c LOOP
+                IF i.nr >2 THEN
+                    id_cl.EXTEND;
+                    id_cl(id_cl.LAST):=i.id_client;
+                END IF;
+            END LOOP;
+         return id_cl;
+        END clienti_max_produse;
+    
+    PROCEDURE voucher AS
+         id_cl clienti := clienti();
+         valoare NUMBER(5);
+    BEGIN 
+          id_cl := clienti_max_produse;
+          
+          FOR i In id_cl.FIRST..id_cl.LAST LOOP
+                SELECT SUM(valoarea) INTO valoare
+                FROM Comenzi 
+                WHERE id_client = id_cl(i); 
+            
+            dbms_output.put_line('Clientul '||id_cl(i)|| ' a primit un voucher in valoare de '|| valoare*0.15||' RON');
+                
+          END LOOP;
+    END;
+END pachet_14;
+
+execute pachet_14.majorare_salariu_ang(); --a marit pt angajatul 101
+select id_angajat,salariu from angajati where id_angajat=101 OR id_angajat=106;
+execute pachet_14.voucher();

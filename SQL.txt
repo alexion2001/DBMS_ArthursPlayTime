@@ -1,0 +1,137 @@
+--11.1. Sa se afiseze in ordinea cronologica a datei, numele si prenumele clientului, numarul de telefon, data comenzii, numele produselor incluse in comanda si se va adauga o coloana "personalizabil",
+--in care se completeaza cu da sau nu, dupa caz. Daca un client are mai multe comenzi plasate se va afisa o comanda cu valoare maxima apartinand clientului. 
+SELECT cl.nume, cl.prenume, cl.telefon, co.data, p.nume "PRODUS",
+CASE p.personalizabil
+         WHEN 1 THEN 'DA'
+         ELSE 'NU'
+END AS "PERSONALIZABIL"     
+FROM CLIENTI cl JOIN COMENZI co ON (cl.id_client = co.id_client)
+                JOIN CUPRINS_COMENZI cc ON (cc.id_comanda = co.id_comanda)
+                JOIN PRODUSE p ON (p.id_produs = cc.id_produs)
+WHERE co.valoarea = (SELECT MAX(valoarea)
+                      FROM COMENZI
+                      WHERE id_client=co.id_client
+                      )
+ORDER BY co.data;
+
+
+
+---11.2.Sa se afiseze numele produsului si numele imprimantei compatibile (dupa compatibilitatea filamentului cu imprimanta si dupa aria bazei- sa ramana 100 cm liberi pe pat), pentru produsele 
+--proiectate de un angajat cu jobul de proiectant care are acelasi salariu cu un angajat cu jobul de executant
+
+SELECT  p.nume "PRODUS", i.nume, a.salariu, f.tip,i.dimensiune_pat,p.dimensiune
+FROM PRODUSE p JOIN FILAMENT f ON (p.id_filament = f.id_filament)
+               JOIN COMPATIBILITATE c ON (c.id_filament = f.id_filament)
+               JOIN IMPRIMANTE i ON (c.id_imprimanta = i.id_imprimanta)
+               JOIN REALIZARE r ON (p.id_produs = r.id_produs)
+               JOIN ANGAJATI a ON (r.id_proiectant = a.id_angajat)                
+WHERE p.dimensiune+100<i.dimensiune_pat
+AND a.salariu IN (SELECT salariu
+                   FROM ANGAJATI
+                   WHERE job ='executant');
+
+--11.3. Sa se afiseze numele, prenumele, salariul  pentru angajatii care au salariul mai mic decat salariul mediu.  Sa se ordoneze dupa salariu, iar apoi alfabetic dupa nume
+--Sa se adauge o coloana 'STATUT' in care se scrie 'nou' pentru persoanele angajate in 2021,'vechi' pentru ceilalti si o coloana 'Vechime' in care se adauga numarul de luni de la angajare pana in prezent
+
+WITH salariu_mediu(salariu) as
+    (SELECT AVG(salariu)
+    FROM angajati) 
+
+select a.nume, prenume,a.salariu,DECODE(to_char(a.data_angajarii,'yyyy'),2021,'NOU','VECHI') STATUT,
+ROUND(MONTHS_BETWEEN(SYSDATE, a.data_angajarii),0) VECHIME
+from angajati a, salariu_mediu s
+Where a.salariu < s.salariu
+ORDER BY a.salariu,a.nume;
+
+
+--11.4. Sa se afiseze numele si prenumele clientilor intr-o singura coloana, scrise cu majuscule, numarul de telefon, data fiecarei comenzi si valoarea totala a comenzilor,
+--incepand cu data primei comenzi plasate in anul 2021 de oricare client 
+--Se vor selecta doar clientii al caror telefon incepe cu '0721', '0785' sau cu '0728'.
+
+
+WITH prima_data(prima) as(SELECT MIN(data)
+FROM COMENZI
+GROUP BY TO_CHAR(data,'yyyy')
+HAVING TO_CHAR(data,'yyyy')='2021')
+    
+    
+SELECT CONCAT(UPPER(cl.nume), UPPER(cl.prenume)) "NUME SI PRENUME" , cl.telefon,co.data, NVL((SELECT SUM(c.valoarea) 
+                                                                                  FROM comenzi c, prima_data p
+                                                                                  WHERE  co.data >= p.prima
+                                                                                    AND id_client=co.id_client
+                                                                                  ),0)VALOARE_TOTALA_COMENZI
+FROM COMENZI co JOIN CLIENTI cl ON (cl.id_client = co.id_client)
+WHERE (SUBSTR(cl.telefon, 1, 4) = '0721' OR SUBSTR(cl.telefon, 1, 4) = '0785' OR SUBSTR(cl.telefon, 1, 4) = '0728');
+
+
+--11.5. Sa se afiseze id-ul furnizorului, numele, data achizitiei, tipul filamentului, culoarea fiecarui tip achizitionat si numarul de achizitii totale facute de la un furnizor.
+--Se vor selecta doar achizitiile facute pana la finalul lunii trecute.  
+
+    
+SELECT a.id_furnizor,f.denumirea,a.data,fil.tip,cul.nume,( SELECT COUNT(*)
+                                    FROM achizitie 
+                                    GROUP BY id_furnizor 
+                                    HAVING COUNT(*)>0 AND id_furnizor=a.id_furnizor)NR_ACHIZITII
+FROM FURNIZOR f JOIN ACHIZITIE a on (f.id_furnizor=a.id_furnizor)
+                JOIN FILAMENT fil on(a.id_filament=fil.id_filament)
+                JOIN CULOARE_FILAMENT c on(c.id_filament=fil.id_filament)
+                JOIN CULORI cul on(c.id_culoare=cul.id_culoare)
+WHERE a.data<=LAST_DAY(SYSDATE-TO_CHAR(SYSDATE,'dd')); 
+
+
+---12.1. Sa se mareasca pretul produsului cu cea mai mica valoare cu 10% 
+UPDATE PRODUSE
+SET pret_vanzare = pret_vanzare*1.10
+WHERE pret_vanzare=(SELECT MIN(pret_vanzare) FROM PRODUSE) ;
+
+--12.2. Sa se stearga culorile care nu apartin niciunui tip de filament
+DELETE FROM CULORI 
+WHERE id_culoare NOT IN (SELECT id_culoare FROM CULOARE_FILAMENT) ;
+
+--12.3. Sa se micsoreze pretul produselor fara recenzie cu 20%
+UPDATE PRODUSE
+SET pret_vanzare = pret_vanzare*1.20
+WHERE id_produs NOT IN (SELECT id_produs FROM RECENZIE) ;
+
+
+--16.1.(OUTER JOIN) Sa se afiseze numele, prenumele si jobul angajatului. Pentru jobul agent se vor afisa toate id-urile clientilor cu care a comunicat vreodata si toate recenzile pe care acest client le-a dat(numarul de stelute). 
+--Se va ordona dupa job si apoi dupa nume
+
+SELECT a.nume,a.prenume, a.job, r.id_produs PRODUS ,c.id_client CLIENT,rec.nr_stelute STELUTE_RECENZTIE
+FROM angajati a FULL OUTER JOIN realizare r ON (a.id_angajat = r.id_proiectant OR a.id_angajat=r.id_executant)
+                FULL OUTER JOIN comunicare c ON (a.id_angajat = c.id_agent)
+                FULL OUTER JOIN clienti cl ON(cl.id_client=c.id_client)
+                FULL OUTER JOIN recenzie rec ON (cl.id_client=rec.id_client)
+ORDER BY a.job, a.nume;
+
+
+--16.2.(DIVISION) Sa se afiseze numele si id-ul imprimantelor pe care se pot printa toate produsele cu baza mai mare de 500.
+
+
+SELECT DISTINCT c.id_imprimanta, i.nume
+FROM compatibilitate c JOIN imprimante i on (i.id_imprimanta=c.id_imprimanta)
+WHERE NOT EXISTS
+ (SELECT *
+ FROM produse prod
+ WHERE prod.dimensiune > 500
+ AND NOT EXISTS
+ (SELECT *
+ FROM compatibilitate comp JOIN filament f on (f.id_filament=comp.id_filament)
+                           JOIN produse p on (p.id_filament=f.id_filament)
+ WHERE prod.id_produs = p.id_produs
+ AND comp.id_imprimanta = c.id_imprimanta)); 
+
+--16.3.(DIVISION) Sa se afiseze id-ul si numele produselor care au numai 5 stelute
+
+select id_produs,nume
+from produse
+where id_produs IN (select id_produs
+ from recenzie
+ where nr_stelute = '*****')
+MINUS
+select id_produs,nume
+from produse
+where id_produs NOT IN (select id_produs
+ from recenzie
+ where nr_stelute = '*****');
+
